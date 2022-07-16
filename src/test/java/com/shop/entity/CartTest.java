@@ -13,7 +13,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @SpringBootTest
 @Transactional
@@ -38,7 +42,7 @@ public class CartTest {
         memberFormDto.setName("홍길동");
         memberFormDto.setAddress("서울시 마포구 합정동");
         memberFormDto.setPassword("1234");
-        return Member.createMember(memberFormDto, passwordEncoder)
+        return Member.createMember(memberFormDto, passwordEncoder);
     }
 
     @Test
@@ -52,6 +56,18 @@ public class CartTest {
         cartRepository.save(cart);
 
 //        트랜잭션이 끝날 때 flush()를 호출하여 DB에 반영
+        em.flush();
+//        영속성 컨텍스트로부터 엔티티를 조회 후 영속성 컨텍스트에 엔티티가 없을 경우 DB 조회.
+        em.clear();
+
+//        저장된 장바구니 Entity 조회
+        Cart savedCart = cartRepository.findById(cart.getId())
+                .orElseThrow(EntityNotFoundException::new);
+        
+//        저장한 member 엔티티의 id와 savedCart에 매핑 된 member의 Entity의 id를 비교
+        assertEquals(savedCart.getMember().getId(),member.getId());
+
+
     }
 
 }
