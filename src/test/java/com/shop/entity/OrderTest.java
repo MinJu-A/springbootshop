@@ -128,6 +128,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(EntityNotFoundException::new);
 //        order객체의 클래스를 출력한다.
         System.out.println("Order class : " + orderItem.getOrder().getClass());
+        System.out.println("===============================");
+        orderItem.getOrder().getOrderDate();
+        System.out.println("===============================");
     }
 
 }

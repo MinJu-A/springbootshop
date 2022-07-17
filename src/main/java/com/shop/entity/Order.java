@@ -20,7 +20,7 @@ public class Order {
     private Long id;
 
 //    한 명의 회원이 여러 번 주문을 할 수 있기 때문에 주문 엔티티 기준 다대일 단방향
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
@@ -35,7 +35,7 @@ public class Order {
 //    속성 값이 order인 이유는 OrderItem에 있는 Order에 의해 관리된다는 의미
 //    부모 엔티티의 영속성 상태 변화를 자식 엔티티에 모두 전이하는 CascadeTypeAll 옵션을 설정
 //    orphanRemoval = 고아 객체 제거 설정
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 //    하나의 주문이 여러 개의 주문 상품을 가진다.
     private List<OrderItem> orderItems = new ArrayList<>();
 

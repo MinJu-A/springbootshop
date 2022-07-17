@@ -20,7 +20,8 @@ public class Cart {
     private Long id;
 
 //    일대일 관계
-    @OneToOne
+//    지연 로딩 설정
+    @OneToOne(fetch = FetchType.LAZY)
 //    외래키 지정
     @JoinColumn(name = "member_id")
     private Member member;
