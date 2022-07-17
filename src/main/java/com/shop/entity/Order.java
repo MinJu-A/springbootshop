@@ -34,7 +34,8 @@ public class Order {
 //    주문 상품 Entity와 일대다 매핑. mappedBy 속성으로 연관 관계의 주인을 설정.
 //    속성 값이 order인 이유는 OrderItem에 있는 Order에 의해 관리된다는 의미
 //    부모 엔티티의 영속성 상태 변화를 자식 엔티티에 모두 전이하는 CascadeTypeAll 옵션을 설정
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//    orphanRemoval = 고아 객체 제거 설정
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 //    하나의 주문이 여러 개의 주문 상품을 가진다.
     private List<OrderItem> orderItems = new ArrayList<>();
 
