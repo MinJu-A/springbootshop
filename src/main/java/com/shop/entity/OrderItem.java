@@ -4,11 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
-public class OrderItem {
+//BaseEntity 상속 받음
+public class OrderItem extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -32,10 +32,4 @@ public class OrderItem {
 
 //    수량
     private int count;
-
-    private LocalDateTime regTime;
-
-    private LocalDateTime updateTime;
-
-
 }
