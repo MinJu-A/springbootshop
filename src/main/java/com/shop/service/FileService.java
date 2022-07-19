@@ -3,6 +3,7 @@ package com.shop.service;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.UUID;
 
@@ -24,6 +25,19 @@ public class FileService {
         fos.close();
 //        업로드 된 파일 이름을 리턴
         return savedFileName;
+    }
+
+    public void deleteFile(String filePath) throws Exception{
+//        파일이 저장된 경로를 이용하여 파일 객체 생성ㄴ
+        File deleteFile = new File(filePath);
+
+        if(deleteFile.exists()){
+//            파일이 존재하면 파일 삭제
+            deleteFile.delete();
+            log.info("파일을 삭제하였습니다");
+        }else {
+            log.info("파일이 존재하지 않습니다.");
+        }
     }
 
 
