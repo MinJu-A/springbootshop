@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 //JPA repository는 2개의 제네릭 타입 사용. <Entity 타입 클래스, 기본키 타입>
-public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item>, ItemRepositoryCustom {
 //    상품명으로 DB 조회
     List<Item> findByItemNm(String itemNm);
 //    Or조건으로 DB 조회
