@@ -71,11 +71,6 @@ public class ItemImgService {
 
         }
     }
-    @Transactional(readOnly = true)
-    public Page<Item> getAdminItemPage(ItemSearchDto itemSearchDto, Pageable pageable){
-        return itemImgRepository.getAdminItemPage(itemSearchDto, pageable);
-    }
-
 
 
 }
