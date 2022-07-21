@@ -45,14 +45,17 @@ public class Order {
 
     public void addOrderItem(OrderItem orderItem) {
         orderItems.add(orderItem);
+//        Order Entity와 OrderItem Entity가 양방향 참조 관계 이므로, orderItem 객체에도 order 객체를 세팅한다.
         orderItem.setOrder(this);
     }
 
     public static Order createOrder(Member member, List<OrderItem> orderItemList) {
         Order order = new Order();
+//        상품을 주문한 회원의 정보
         order.setMember(member);
 
         for(OrderItem orderItem : orderItemList) {
+//            한 번에 여러 개의 상품을 주문할 수 있게 리스트 형태로 
             order.addOrderItem(orderItem);
         }
 
@@ -61,6 +64,7 @@ public class Order {
         return order;
     }
 
+//    총 금액 계산
     public int getTotalPrice() {
         int totalPrice = 0;
         for(OrderItem orderItem : orderItems){
