@@ -2,6 +2,7 @@ package com.shop.controller;
 
 import com.shop.dto.CartDetailDto;
 import com.shop.dto.CartItemDto;
+import com.shop.dto.CartOrderDto;
 import com.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -92,6 +93,30 @@ public class CartController {
         cartService.deleteCartItem(cartItemId);
 
         return new ResponseEntity<Long>(cartItemId, HttpStatus.OK);
+    }
+
+//    장바구니 안에 있는 상품을 주문한다
+    @PostMapping(value = "/cart/orders")
+//    장바구니에 있는 정보를 가지고 와요
+    public @ResponseBody ResponseEntity orderCartItem(@RequestBody CartOrderDto cartOrderDto, Principal principal){
+
+        List<CartOrderDto> cartOrderDtoList = cartOrderDto.getCartOrderDtoList();
+
+//        장바구니에서 주문할 리스트가 비어있거나 선택 된 상품이 없다면 에러 메세지 리턴
+        if(cartOrderDtoList == null || cartOrderDtoList.size() == 0){
+            return new ResponseEntity<String>("주문할 상품을 선택해주세요", HttpStatus.FORBIDDEN);
+        }
+
+        for (CartOrderDto cartOrder : cartOrderDtoList) {
+            if(!cartService.validateCartItem(cartOrder.getCartItemId(), principal.getName())){
+                return new ResponseEntity<String>("주문 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            }
+        }
+
+//        주문이 완료된 후 주문 번호 생성
+        Long orderId = cartService.orderCartItem(cartOrderDtoList, principal.getName());
+//        생성된 주문 번호와 함께 성공 상태 코드를 받는다
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
     }
 
 }

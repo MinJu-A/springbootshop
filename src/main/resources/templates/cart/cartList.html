@@ -126,6 +126,7 @@
             });
         }
 
+        //장바구니에 있는 상품을 주문하는 경우
         function orders(){
             let token = $("meta[name='_csrf']").attr("content");
             let header = $("meta[name='_csrf_header']").attr("content");
@@ -135,16 +136,18 @@
             let dataList = new Array();
             let paramData = new Object();
 
+            // 체크 되어있는 장바구니의 상품 아이디만 전달.
             $("input[name=cartChkBox]:checked").each(function() {
-                var cartItemId = $(this).val();
-                var data = new Object();
+                let cartItemId = $(this).val();
+                let data = new Object();
                 data["cartItemId"] = cartItemId;
                 dataList.push(data);
             });
 
+            //방금 만든 장바구니 상품 아이디를 저장하고 있는 dataList 배열을 paramData(전달해 줄 데이타)에 추가
             paramData['cartOrderDtoList'] = dataList;
 
-            var param = JSON.stringify(paramData);
+            let param = JSON.stringify(paramData);
 
             $.ajax({
                 url      : url,
@@ -159,6 +162,7 @@
                 cache   : false,
                 success  : function(result, status){
                     alert("주문이 완료 되었습니다.");
+                    //주문이 완료 되었고 성공 하였다면 구매 이력 페이지로 이동하여 내가 구매한 내용 조회
                     location.href='/orders';
                 },
                 error : function(jqXHR, status, error){
@@ -269,6 +273,7 @@
         </h2>
 
         <div class="text-center mt-3">
+<!--            주문하기 버튼을 누르면 장바구니에 있는 내용을 주문하는 orders() 메소드 호출 -->
             <button type="button" class="btn btn-primary btn-lg" onclick="orders()">주문하기</button>
         </div>
 

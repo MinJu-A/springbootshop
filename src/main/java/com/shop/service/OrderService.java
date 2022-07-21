@@ -106,4 +106,27 @@ public class OrderService {
         order.cancelOrder();
     }
 
+//    장바구니 상품 주문할 때 사용하는 메소드
+    public Long orders(List<OrderDto> orderDtoList, String email){
+
+        Member member = memberRepository.findByEmail(email);
+        List<OrderItem> orderItemList = new ArrayList<>();
+
+//        주문할 상품 리스트 생성
+        for (OrderDto orderDto : orderDtoList) {
+            Item item = itemRepository.findById(orderDto.getItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+            orderItemList.add(orderItem);
+        }
+
+//        지금 로그인 한 멤버와 방금 주문한 상품 리스트를 가지고 주문을 만든다
+        Order order = Order.createOrder(member, orderItemList);
+        orderRepository.save(order);
+
+        return order.getId();
+    }
+
+
 }
