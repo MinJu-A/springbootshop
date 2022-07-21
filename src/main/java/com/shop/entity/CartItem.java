@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter@Setter
 @Table(name = "cart_item")
-public class CartItem {
+public class CartItem extends BaseEntity{
 
     @Id
 //    auto indexing
@@ -48,6 +48,8 @@ public class CartItem {
     public void updateCount(int count){
         this.count = count;
     }
+
+
 
 
 }

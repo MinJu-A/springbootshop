@@ -1,5 +1,6 @@
 package com.shop.service;
 
+import com.shop.dto.CartDetailDto;
 import com.shop.dto.CartItemDto;
 import com.shop.entity.Cart;
 import com.shop.entity.CartItem;
@@ -12,8 +13,11 @@ import com.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.util.StringUtils;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +62,56 @@ public class CartService {
         }
     }
 
-    
+    @Transactional(readOnly = true)
+    public List<CartDetailDto> getCartList(String email){
+
+        List<CartDetailDto> cartDetailDtoList = new ArrayList<>();
+
+//        현재 로그인 한 회원의 장바구니 조회
+        Member member = memberRepository.findByEmail(email);
+        Cart cart = cartRepository.findByMemberId(member.getId());
+//        장바구니가 비어있을 경우 -> 빈 리스트 반환
+        if(cart == null){
+            return cartDetailDtoList;
+        }
+
+//        장바구니에 물건이 있을 경우 담겨져 있는 상품 정보(아이디)를 조회
+        cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getId());
+        return cartDetailDtoList;
+    }
+
+    @Transactional(readOnly = true)
+
+    public boolean validateCartItem(Long cartItemId, String email){
+        Member curMember = memberRepository.findByEmail(email);
+//        현재 로그인 한 회원 조회
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
+//      장바구니를 저장한 회원을 조회
+        Member savedMember = cartItem.getCart().getMember();
+
+//        로그인 한 회원 == 장바구니를 만든 회원이라면 true, 아니면 false
+        if(!StringUtils.equals(curMember.getEmail(), savedMember.getEmail())){
+            return false;
+        }
+
+        return true;
+    }
+
+//    장바구니의 수량 업데이트
+    public void updateCartItemCount(Long cartItemId, int count){
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        cartItem.updateCount(count);
+    }
+
+//    장바구니 상품 삭제
+    public void deleteCartItem(Long cartItemId) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
+        cartItemRepository.delete(cartItem);
+    }
+
+
 }
