@@ -86,23 +86,27 @@ class OrderServiceTest {
         assertEquals(totalPrice, order.getTotalPrice());
     }
 
-//    @Test
-//    @DisplayName("주문 취소 테스트")
-//    public void cancelOrder(){
-//        Item item = saveItem();
-//        Member member = saveMember();
-//
-//        OrderDto orderDto = new OrderDto();
-//        orderDto.setCount(10);
-//        orderDto.setItemId(item.getId());
-//        Long orderId = orderService.order(orderDto, member.getEmail());
-//
-//        Order order = orderRepository.findById(orderId)
-//                .orElseThrow(EntityNotFoundException::new);
-//        orderService.cancelOrder(orderId);
-//
-//        assertEquals(OrderStatus.CANCEL, order.getOrderStatus());
-//        assertEquals(100, item.getStockNumber());
-//    }
+    @Test
+    @DisplayName("주문 취소 테스트")
+    public void cancelOrder(){
+        Item item = saveItem();
+        Member member = saveMember();
+
+        OrderDto orderDto = new OrderDto();
+        orderDto.setCount(10);
+        orderDto.setItemId(item.getId());
+//        세팅한 주문 정보를 주문에 넣어준다
+        Long orderId = orderService.order(orderDto, member.getEmail());
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+//        조회해서 나온 아이디가 지금 로그인 한 아이디랑 맞으면 주문을 취소합니다 
+        orderService.cancelOrder(orderId);
+
+//        주문 상태가 취소인지 확인
+        assertEquals(OrderStatus.CANCEL, order.getOrderStatus());
+//        주문 취소 후 수량이 100이 나오는지 확인
+        assertEquals(100, item.getStockNumber());
+    }
 
 }

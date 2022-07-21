@@ -37,6 +37,7 @@
         cache   : false,
         success  : function(result, status){
           alert("주문이 취소 되었습니다.");
+          //주문 취소 시 현재 페이지로 redirect
           location.href='/orders/' + [[${page}]];
         },
         error : function(jqXHR, status, error){
@@ -98,6 +99,7 @@
       <h4 th:text="${order.orderDate} + ' 주문'"></h4>
       <div class="ml-3">
         <th:block th:if="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">
+<!--          주문 취소를 눌렀을 때 주문이 취소되게 한다 -->
           <button type="button" class="btn btn-outline-secondary" th:value="${order.orderId}" onclick="cancelOrder(this.value)">주문취소</button>
         </th:block>
         <th:block th:unless="${order.orderStatus == T(com.shop.constant.OrderStatus).ORDER}">

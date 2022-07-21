@@ -76,4 +76,18 @@ public class OrderController {
         return "order/orderHist";
     }
 
+
+    @PostMapping("/order/{orderId}/cancel")
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId , Principal principal){
+
+//        주문 내역에 들어가있는 아이디와 지금 인증된 아이디가 같은지 확인 후 다르면 주문 취소 못하게 막음
+        if(!orderService.validateOrder(orderId, principal.getName())){
+            return new ResponseEntity<String>("주문 취소 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+//        아이디가 같으면 주문 취소 로직 호출
+        orderService.cancelOrder(orderId);
+//        처리됐다는 메세지 리턴
+        return new ResponseEntity<Long>(orderId, HttpStatus.OK);
+    }
 }

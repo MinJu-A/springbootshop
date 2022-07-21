@@ -73,4 +73,12 @@ public class Order {
         return totalPrice;
     }
 
+//    cancelOrder 메소드 소출 시 주문을 취소하게 함
+    public void cancelOrder() {
+        this.orderStatus = OrderStatus.CANCEL;
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
 }
